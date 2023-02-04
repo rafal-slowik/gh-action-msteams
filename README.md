@@ -1,3 +1,5 @@
-# Python Github Action
+# Simple MS Teams Notifier Action
 
-Returns square of the number passed via action
+## A Github Action that sends notifications to the MS Teams
+
+

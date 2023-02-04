@@ -3,18 +3,15 @@ name: Test Action
 on: [push]
 
 jobs:
-  get-num-square:
+  send-msteams-notification:
     runs-on: ubuntu-latest
-    name: Return's the number square
+    name: Sends a notifications to MS Teams
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-      - name: Fetch num squared
-        id: get_square
-        uses: ./ # Uses an action in the root directory
-        # or use a released Github Action
-        # uses: shipyard/github-action/fetch-shipyard-env@1.0.0
+      - name: Notification
+        if: always()
+        id: send_notification
+        uses: rafal-slowik/gh-action-msteams@master # Uses an action in the root directory
         with:
-          num: 11
-      - name: Print the square
-        run: echo "${{ steps.get_square.outputs.num_squared }}"
+          webhook_uri: ${{ secrets.MSTEAMS_WEBHOOK }}
+        # or use a released Github Action
+        # uses: rafal-slowik/gh-action-msteams@master
