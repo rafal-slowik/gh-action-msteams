@@ -25,7 +25,7 @@ def send_sectioned_message():
     input_data = determine_input()
     # start the message
     teams_message = pymsteams.connectorcard(hook_url)
-    teams_message.title(f"Workflow {workflow_name} {input_data['status']}")
+    teams_message.title(f"Workflow '{workflow_name}' {input_data['status']}")
     teams_message.text(f"{ repo_server_url }/{ repo_name }/commit/{ github_sha }")
 
     # section 1
@@ -77,7 +77,7 @@ def determine_input():
         case 'cancelled':
             return {
                 "iconUrl": "https://raw.githubusercontent.com/rafal-slowik/gh-action-msteams/master/icons/"
-                           "cancelled.png",
+                           "cancelled-screenshot.png",
                 "color": "ffec50",
                 "title": f"{msg} has been cancelled",
                 "status": "cancelled"
