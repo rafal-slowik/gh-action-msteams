@@ -3,7 +3,7 @@ import os
 import logging
 import json
 
-log = logging.getLogger(__name__)
+logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(threadName)s -  %(levelname)s - %(message)s')
 
 job_status = os.environ.get("STATUS")
 job_name = os.environ.get("JOB_NAME")
@@ -25,7 +25,7 @@ def send_sectioned_message():
     input_data = determine_input()
     # start the message
     teams_message = pymsteams.connectorcard(hook_url)
-    teams_message.title(f"CI build {input_data['status']}")
+    teams_message.title(f"Workflow {workflow_name} {input_data['status']}")
     teams_message.text(f"{ repo_server_url }/{ repo_name }/commit/{ github_sha }")
 
     # section 1
@@ -53,9 +53,9 @@ def send_sectioned_message():
 def evaluate_response(resp_status_code):
     if isinstance(resp_status_code, int) and \
             0 <= resp_status_code <= 299:
-        log.info("Response code: %s", resp_status_code)
+        logging.info("Response code ok: %s", resp_status_code)
     else:
-        log.error("Unexpected response: %s", resp_status_code)
+        logging.error("Unexpected response: %s", resp_status_code)
         raise ValueError(f"Unexpected response: '{resp_status_code}'")
 
 
@@ -90,4 +90,5 @@ def determine_input():
                 "status": "succeeded"
             }
         case _:
+            logging.error("Unexpected response: %s", job_status)
             raise ValueError(f"The job_status contains unexpected value: '{job_status}'")
