@@ -77,7 +77,7 @@ def determine_input():
         case 'cancelled':
             return {
                 "iconUrl": "https://raw.githubusercontent.com/rafal-slowik/gh-action-msteams/master/icons/"
-                           "cancelled-screenshot.png",
+                           "cancelled.png",
                 "color": "ffec50",
                 "title": f"{msg} has been cancelled",
                 "status": "cancelled"
