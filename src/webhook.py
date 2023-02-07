@@ -23,7 +23,6 @@ def send_sectioned_message():
     """
 
     input_data = determine_input()
-
     # start the message
     teams_message = pymsteams.connectorcard(hook_url)
     teams_message.title(f"CI build {input_data['status']}")
@@ -46,10 +45,18 @@ def send_sectioned_message():
     teams_message.addSection(section_1)
     teams_message.color(input_data["color"])
     # teams_message.printme()
-
     # send
     teams_message.send()
-    assert isinstance(teams_message.last_http_response.status_code, int)
+    evaluate_response(teams_message.last_http_response.status_code)
+
+
+def evaluate_response(resp_status_code):
+    if isinstance(resp_status_code, int) and \
+            0 <= resp_status_code <= 299:
+        log.info("Response code: %s", resp_status_code)
+    else:
+        log.error("Unexpected response: %s", resp_status_code)
+        raise ValueError(f"Unexpected response: '{resp_status_code}'")
 
 
 def determine_input():
