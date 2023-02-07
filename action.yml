@@ -73,7 +73,6 @@ runs:
         token: ${{ inputs.token }}
     - name: Sends a notification to ms teams
       id: send-msteams
-      if: ${{ !github.event.pull_request }}
       env:
         STATUS: ${{ inputs.status }}
         JOB_NAME: ${{ inputs.job_name }}
