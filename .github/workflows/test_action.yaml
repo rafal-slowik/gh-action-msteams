@@ -10,7 +10,7 @@ jobs:
       - name: Notification
         if: always()
         id: send_notification
-        uses: "rafal-slowik/gh-action-msteams@$master" # Uses an action in the root directory
+        uses: rafal-slowik/gh-action-msteams@master # Uses an action in the root directory
         with:
           webhook_uri: ${{ secrets.MSTEAMS_WEBHOOK }}
         # or use a released Github Action
