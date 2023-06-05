@@ -3,6 +3,8 @@ import os
 import logging
 import json
 
+import requests.exceptions
+
 logging.basicConfig(level=logging.INFO, format='%(asctime)s - %(name)s - %(threadName)s -  %(levelname)s - %(message)s')
 
 job_status = os.environ.get("STATUS")
@@ -26,7 +28,7 @@ def send_sectioned_message():
     # start the message
     teams_message = pymsteams.connectorcard(hook_url)
     teams_message.title(f"Workflow '{workflow_name}' {input_data['status']}")
-    teams_message.text(f"{ repo_server_url }/{ repo_name }/commit/{ github_sha }")
+    teams_message.text(f"{repo_server_url}/{repo_name}/commit/{github_sha}")
 
     # section 1
     section_1 = pymsteams.cardsection()
@@ -35,7 +37,7 @@ def send_sectioned_message():
     section_1.activityImage(input_data["iconUrl"])
 
     # add link button
-    teams_message.addLinkButton("Go to the action", f"{ repo_server_url }/{ repo_name }/actions/runs/{ run_id }")
+    teams_message.addLinkButton("Go to the action", f"{repo_server_url}/{repo_name}/actions/runs/{run_id}")
 
     # add facts
     for k, v in json.loads(facts).items():
@@ -46,8 +48,12 @@ def send_sectioned_message():
     teams_message.color(input_data["color"])
     # teams_message.printme()
     # send
-    teams_message.send()
-    evaluate_response(teams_message.last_http_response.status_code)
+    try:
+        teams_message.send()
+        evaluate_response(teams_message.last_http_response.status_code)
+    except requests.exceptions.Timeout as te:
+        logging.warning(te)
+        logging.warning("The Teams notification will be skipped due to the timeout exception!!!")
 
 
 def evaluate_response(resp_status_code):
